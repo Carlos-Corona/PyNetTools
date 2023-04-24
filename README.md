@@ -7,12 +7,29 @@ Wake up devices on your local network using Wake-on-LAN
 Scan local network for connected devices using ping and ARP
 Simple and easy-to-use 
 
-### Instalation
+### Try it
 
-Install the library
+Download the library
 
 ```bash
 git clone https://github.com/(***))/pywakeonlan.git
+```
+from root path `../PyNetTools_Project/`
+
+- This program will send a magic packet to the broadcast address of the network, after will send `n` number of pings to try to reach the computer
+``` bash
+python -m Examples.main
+
+[crowne@fedora PyNetTools_Project]$ python -m Examples.main
+60:a4:c7:b2:b0:da is a valid MAC address.
+Magic packet sent to 10:d4:b7:b2:a0:da
+PING 192.168.100.66 (192.168.100.66) 56(84) bytes of data.
+64 bytes from 192.168.100.66: icmp_seq=1 ttl=64 time=0.218 ms
+
+--- 192.168.100.66 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.218/0.218/0.218/0.000 ms
+192.168.100.66 is reachable.
 ```
 
 
@@ -29,7 +46,7 @@ To perform a massive ping and ARP scan on your local network, you can use the pr
 - Add support for IPv6 addresses
 - Add command-line interface
 - Improve capabilities
-
+- Include more capabilities as `ip addr`, `hostname -i` and more...
 
 ### License
 This project is licensed under the MIT License.

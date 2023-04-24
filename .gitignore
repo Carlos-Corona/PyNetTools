@@ -8,3 +8,4 @@
 /docs/_build
 /MANIFEST
 __pycache__/
+*.sync-conflict-*

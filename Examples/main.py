@@ -1,23 +1,18 @@
 from PyNetTools import PingService, WakeOnLanService
-from dotenv import load_dotenv
-import os
-from wakeonlan import send_magic_packet
-import time
 
 if __name__ == "__main__":
     # create various prints that show the program logo and what it does
-    load_dotenv()
-    PingME = PingService(count=1)
+    PingME = PingService(count=50)
     MagicMe = WakeOnLanService()
     print("Wake on Lan")
     print("Wake up your computer by sending a magic packet to the broadcast address of the network.")
     print("This program will send a magic packet to the broadcast address of the network.")
     
-    MAC = os.getenv("MAC_ADDRESS")
-    IP = os.getenv("IP_ADDRESS")
+    MAC_ADDRESS = "60:a4:c7:b2:b0:da"
+    IP_ADDRESS = "192.168.100.66"
     
-    print("Magic packet sent to " + MAC)
+    print("Magic packet sent to " + MAC_ADDRESS)
     
 
-    MagicMe.wake_on_lan(MAC)
-    PingME.ping(IP)
+    MagicMe.wake_on_lan(MAC_ADDRESS)
+    PingME.ping(IP_ADDRESS)
