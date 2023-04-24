@@ -20,15 +20,19 @@ import subprocess
 import socket
 import struct
 import re
+import os
+import ipaddress
+from concurrent.futures import ThreadPoolExecutor
 
-
+#First Parent
 class PingService:
     def __init__(self, count=5):
         self.count = count
 
     def ping(self, ip):
         if self.check_IP_Syntax(ip):
-            self.ping_cmd = f"ping {ip} -c {self.count}"
+            param = "-n" if os.sys.platform == "win32" else "-c"
+            self.ping_cmd = f"ping {ip} {param} {self.count}"
             response = subprocess.call(self.ping_cmd, shell=True)
             if response == 0:
                 print(f"{ip} is reachable.")
@@ -56,11 +60,11 @@ class PingService:
         else:
             return False
 
-
-class WakeOnLanService:
-    def __init__(self):
-        pass
-
+#Second Parent
+class WakeOnLanService(PingService):  # Inherit from PingService
+    def __init__(self, count=5):
+        super().__init__(count)
+        
     def wake_on_lan(self, MAC_ADDRESS):
         if self.check_MAC_Syntax(MAC_ADDRESS):
             print(f"{MAC_ADDRESS} is a valid MAC address.")
@@ -97,9 +101,49 @@ class WakeOnLanService:
         else:
             return False
 
+#Child
+class NetTools(WakeOnLanService):
+    def __init__(self, network = "192.168.100.0/24",count = 5):
+        super().__init__(count)
+        self.network = network
+
+    def get_mac_address(self, ip_address: str) -> str:
+        platform = os.sys.platform
+        arp_cmd = f"arp -a {ip_address}" if platform == "win32" else f"arp -n {ip_address}"
+        output = os.popen(arp_cmd).read()
+        mac_address = re.search(r"(([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2}))", output)
+        if mac_address:
+            return mac_address.group(0)
+        else:
+            return None
+
+    def ping_and_get_mac(self,ip_address: str):
+        if super().ping(ip_address):
+            mac_address = self.get_mac_address(ip_address)
+            if mac_address:
+                print(f"IP: {ip_address}, MAC: {mac_address}")
+                return ip_address, mac_address
+        return None
+
+    def discover_devices(self):
+        network = ipaddress.IPv4Network(self.network, strict=False)
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            results = list(executor.map(self.ping_and_get_mac, [str(ip) for ip in network.hosts()]))
+        devices = [result for result in results if result is not None]
+        return results, devices
 
 if __name__ == "__main__":
     print("PingP is a library of functions to ping IP addresses or domain names.")
     print("Please run the test suite (test_pingp.py) to see if the library is working correctly.")
     print("If you want to use the library, please import it into your program.")
     # To Do: Add test suite.
+    network = "192.168.100.0/24"
+    net = NetTools(network ,count=1)
+    
+    ip_address, devices = net.discover_devices()
+    print(f"Found {len(devices)} devices in network {network}:")
+    for ip_address, mac_address in devices:
+        print(f"IP: {ip_address}, MAC: {mac_address}")
+
+    
+    
