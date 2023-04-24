@@ -103,15 +103,16 @@ class WakeOnLanService(PingService):  # Inherit from PingService
 
 #Child
 class NetTools(WakeOnLanService):
-    def __init__(self, network = "192.168.100.0/24",count = 5):
+    def __init__(self, network = "192.168.100.0/24",worker_count = None,count = 5):
         super().__init__(count)
         self.network = network
+        self.worker_count = worker_count
 
     def get_mac_address(self, ip_address: str) -> str:
         platform = os.sys.platform
         arp_cmd = f"arp -a {ip_address}" if platform == "win32" else f"arp -n {ip_address}"
         output = os.popen(arp_cmd).read()
-        mac_address = re.search(r"(([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2}))", output)
+        mac_address = super().check_MAC_Syntax(output)
         if mac_address:
             return mac_address.group(0)
         else:
@@ -127,23 +128,11 @@ class NetTools(WakeOnLanService):
 
     def discover_devices(self):
         network = ipaddress.IPv4Network(self.network, strict=False)
-        with ThreadPoolExecutor(max_workers=10) as executor:
+        with ThreadPoolExecutor(max_workers=self.worker_count) as executor:
             results = list(executor.map(self.ping_and_get_mac, [str(ip) for ip in network.hosts()]))
         devices = [result for result in results if result is not None]
         return results, devices
 
 if __name__ == "__main__":
-    print("PingP is a library of functions to ping IP addresses or domain names.")
-    print("Please run the test suite (test_pingp.py) to see if the library is working correctly.")
-    print("If you want to use the library, please import it into your program.")
     # To Do: Add test suite.
-    network = "192.168.100.0/24"
-    net = NetTools(network ,count=1)
-    
-    ip_address, devices = net.discover_devices()
-    print(f"Found {len(devices)} devices in network {network}:")
-    for ip_address, mac_address in devices:
-        print(f"IP: {ip_address}, MAC: {mac_address}")
-
-    
-    
+    print("Hello World")

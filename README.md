@@ -32,6 +32,16 @@ rtt min/avg/max/mdev = 0.218/0.218/0.218/0.000 ms
 192.168.100.66 is reachable.
 ```
 
+- This program perform a masive ping to discover all devices in the local network
+
+``` bash
+python -m Examples.masive_ping
+
+[crowne@fedora PyNetTools_Project]$ python -m Examples.main
+
+```
+
+
 
 ### Massive Ping and ARP
 

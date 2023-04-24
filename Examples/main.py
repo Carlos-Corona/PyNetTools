@@ -11,8 +11,6 @@ if __name__ == "__main__":
     MAC_ADDRESS = "60:a4:c7:b2:b0:da"
     IP_ADDRESS = "192.168.100.66"
     
-    print("Magic packet sent to " + MAC_ADDRESS)
-    
-
     MagicMe.wake_on_lan(MAC_ADDRESS)
+    print("Magic packet sent to " + MAC_ADDRESS)
     PingME.ping(IP_ADDRESS)
