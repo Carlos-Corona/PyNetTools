@@ -9,8 +9,8 @@
         - https://opensource.org/licenses/MIT
         
     Version:
-        - 0.0.1
-        - https://github.com/Carlos-Corona/pingp/releases
+        - 0.1
+        - https://github.com/Carlos-Corona/PyNetTools.git
     
 Returns:
     _type_: _description_
@@ -134,5 +134,7 @@ class NetTools(WakeOnLanService):
         return results, devices
 
 if __name__ == "__main__":
-    # To Do: Add test suite.
+    # To Do:
+    #   Add tests
+    #   As a standalone script
     print("Hello World")

@@ -49,7 +49,7 @@ To perform a massive ping and ARP scan on your local network, you can use the pr
 
 ***Broken
 
-### Version: 0.0.1
+### Version: 0.1
 
 ### To-Do
 - Improve error handling and input validation
