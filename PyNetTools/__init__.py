@@ -69,8 +69,8 @@ class WakeOnLanService(PingService):  # Inherit from PingService
         if self.check_MAC_Syntax(MAC_ADDRESS):
             print(f"{MAC_ADDRESS} is a valid MAC address.")
             mac_bytes = MAC_ADDRESS.split(":")
-            magic_packet = b'\xff' * 6 + \
-                (struct.pack('!6B', *[int(x, 16) for x in mac_bytes])) * 16
+            #magic_packet = b'\xff' * 6 + \(struct.pack('!6B', *[int(x, 16) for x in mac_bytes])) * 16
+            magic_packet = self.create_magic_packet(MAC_ADDRESS)
             with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
                 s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
                 s.sendto(magic_packet, ('<broadcast>', 9))
