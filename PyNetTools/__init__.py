@@ -112,12 +112,28 @@ class NetTools(WakeOnLanService):
         platform = os.sys.platform
         arp_cmd = f"arp -a {ip_address}" if platform == "win32" else f"arp -n {ip_address}"
         output = os.popen(arp_cmd).read()
-        mac_address = super().check_MAC_Syntax(output)
+        mac_address = self.MacAddressExtractor(output)
         if mac_address:
-            return mac_address.group(0)
+            return mac_address
         else:
             return None
-
+    def MacAddressExtractor(self,MAC_ADDRESS: str)  -> str:
+        left =  1
+        rigth = 1
+        sub_string = ""
+        for n in range(len(MAC_ADDRESS)):
+            if MAC_ADDRESS[n] != " " and left != rigth:
+                left = n
+                rigth = n
+                sub_string = ""
+            if MAC_ADDRESS[n] == " " and left == rigth or MAC_ADDRESS[n] == "\n" and left == rigth:
+                rigth = n            
+                if super().check_MAC_Syntax(sub_string):
+                    return sub_string
+                sub_string = ""
+            sub_string = sub_string + MAC_ADDRESS[n]
+        return None
+        
     def ping_and_get_mac(self,ip_address: str):
         if super().ping(ip_address):
             mac_address = self.get_mac_address(ip_address)

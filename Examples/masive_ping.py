@@ -6,7 +6,7 @@ if __name__ == "__main__":
     print("If you want to use the library, please import it into your program.")
     # To Do: Add test suite.
     network = "192.168.100.0/24" # Network to perform the scan  
-    net = NetTools(network,worker_count=1,count=1)
+    net = NetTools(network,worker_count=None,count=1)
     
     ip_address, devices = net.discover_devices() # Discover devices in the network
     print(f"Found {len(devices)} devices in network {network}:")
